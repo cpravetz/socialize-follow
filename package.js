@@ -1,8 +1,8 @@
 Package.describe({
-  name: 'socialize:follow',
+  name: 'seakaytee:socialize-follow',
   summary: 'A social follow package',
   version: '0.1.0',
-  git: 'https://github.com/copleykj/socialize-follow.git'
+  git: 'https://github.com/cpravetz/socialize-follow.git'
 });
 
 Package.onUse(function(api) {
