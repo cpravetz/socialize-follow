@@ -1,3 +1,6 @@
+import { User } from 'meteor/socialize:user-model';
+import { Follow, FollowsCollection } from './follow-model.js';
+
 User.methods({
 
     /**
