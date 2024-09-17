@@ -1,7 +1,7 @@
 import { BaseModel } from 'meteor/socialize:base-model';
 import { Meteor } from'meteor/meteor';
 import { Mongo } from'meteor/mongo';
-import SimpleSchema from 'simpl-schema';
+import SimpleSchema from 'meteor/aldeed:simple-schema';
 import { User } from 'meteor/socialize:user-model';
 
 
@@ -20,9 +20,9 @@ import { User } from 'meteor/socialize:user-model';
         * @method getFollowedUser
         * @returns {Object} The user being followed
         */
-        getFollowedUser() {
+        async getFollowedUser() {
             if(this.followId){
-                return  Meteor.users.findOne(this.followId);
+                return  await Meteor.users.findOneAsync(this.followId);
             }
         }
 
@@ -31,8 +31,9 @@ import { User } from 'meteor/socialize:user-model';
         * @method isFollowDuplicate
         * @returns {boolean} True if the follow relationship is a duplicate, false otherwise
         */
-        isFollowDuplicate() {
-            return !!FollowsCollection.findOne({userId:this.userId, followId:this.followId});
+        async isFollowDuplicate() {
+            const follow = await FollowsCollection.findOneAsync({userId:this.userId, followId:this.followId});
+            return !!follow;
         }
 
         /**
@@ -45,7 +46,7 @@ import { User } from 'meteor/socialize:user-model';
                 throw new Error('Duplicate follow relationship');
             }
 
-            FollowsCollection.insert({ userId: this.userId, followId: this.followId });
+            FollowsCollection.insertAsync({ userId: this.userId, followId: this.followId });
         }
     }
 
@@ -59,7 +60,7 @@ import { User } from 'meteor/socialize:user-model';
     */
     Follow.prototype.user = function () {
         if(this.followId){
-            return  Meteor.users.findOne(this.followId);
+            return  Meteor.users.findOneAsync(this.followId);
         }
     };
 
@@ -68,8 +69,8 @@ import { User } from 'meteor/socialize:user-model';
     * @memberof Follow
     * @returns {Boolean} Returns if the follow already exists
     */
-    Follow.prototype.isDuplicate = function () {
-        return !!FollowsCollection.findOne({userId:this.userId, followId:this.followId});
+    Follow.prototype.isDuplicate = async function () {
+        return !!(await FollowsCollection.findOneAsync({userId:this.userId, followId:this.followId}));
     };
 
 
@@ -77,7 +78,6 @@ import { User } from 'meteor/socialize:user-model';
     Follow.appendSchema({
         userId: {
             type: String,
-            regEx: SimpleSchema.RegEx.Id,
             autoValue: function () {
                 if(this.isInsert){
                     if(!this.isSet && this.isFromTrustedCode){
@@ -90,7 +90,6 @@ import { User } from 'meteor/socialize:user-model';
         },
         followId: {
             type: String,
-            regEx: SimpleSchema.RegEx.Id,
             index: 1
         },
         createdAt: {

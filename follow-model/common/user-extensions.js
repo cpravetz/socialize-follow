@@ -69,10 +69,10 @@ User.methods({
      * Remove the followship connection from the logged in user to the user
      * @method unFollow
      */
-    unfollow:function () {
-        var follow = FollowsCollection.findOne({userId:Meteor.userId(), followId:this._id});
+    unfollow:async function() {
+        var follow = await FollowsCollection.findOneAsync({userId:Meteor.userId(), followId:this._id});
 
-        follow && follow.remove();
+        follow && follow.removeAsync();
     },
 
     /**
@@ -80,8 +80,8 @@ User.methods({
      * @method isFollowed
      * @returns {Boolean} Whether the user followed by the logged in user
      */
-    isFollowed: function () {
-        return !!FollowsCollection.findOne({userId:Meteor.userId(), followId:this._id});
+    isFollowed: async function() {
+        return !!(await FollowsCollection.findOneAsync({userId:Meteor.userId(), followId:this._id}));
     }
 
 });

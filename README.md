@@ -9,7 +9,7 @@ Provides social network style Follows.
 To gain access the methods of a follow you must first have an instance of a follow. You can obtain an instance by performing a query on the follow collection. A `findOne` will return an instance and a `find` will return a cursor which when iterated over will return an instance for each iteration. Ways of obtaining instances that belong to the current user are provided as extensions to the `User` class and are detailed in the [User Extensions](#user-extensions) section of this document
 
 ```javascript
-var follow = Meteor.follows.findOne(); //instance of Follow
+var follow = Meteor.follows.findOneAsync(); //instance of Follow
 
 var follows = Meteor.follows.find();  //cursor which returns Follow instances
 ```
