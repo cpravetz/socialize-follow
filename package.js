@@ -6,6 +6,7 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.versionsFrom(['2.3','3.0']);
   
   api.use(['socialize:user-model']);
 
